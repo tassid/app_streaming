@@ -1,0 +1,39 @@
+name: app_streaming
+description: "Streaming app clone"
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_svg: ^2.0.10+1  
+  cupertino_icons: ^1.0.6
+  url_launcher: ^6.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+
+  uses-material-design: true
+  assets: 
+    - assets/netflix_logo.svg
+    - assets/image_1.png
+    - assets/image_2.png
+    - assets/image_3.png
+    - assets/image_4.png
+    - assets/image_5.png
+    - assets/image_6.png
+    - assets/image_7.png
+    - assets/image_8.png
+    - assets/image_9.png
+    - assets/image_10.png
+    - assets/image_11.png
+    - assets/image_12.png
+    - assets/image_13.png
