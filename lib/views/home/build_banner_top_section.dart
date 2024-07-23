@@ -8,7 +8,7 @@ Widget buildBannerTopSection() {
         ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(20.0)),
           child: Image.asset(
-            'assets/fundo_banner.png',
+            'assets/fundo_banner.jpg',
             width: double.infinity,
             height: 500,
             fit: BoxFit.cover,
@@ -17,7 +17,7 @@ Widget buildBannerTopSection() {
         ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(20.0)),
           child: Container(
-            padding: const EdgeInsets.all(28.0),
+            padding: const EdgeInsets.all(40.0),
             color: Colors.grey[900]?.withOpacity(0.6),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -37,7 +37,7 @@ Widget buildBannerTopSection() {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 16,
                   ),
                 ),
                 const SizedBox(height: 10),

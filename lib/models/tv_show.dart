@@ -11,6 +11,6 @@ class TvShow extends Content {
     required super.dataLancamento,
     required this.finalizada,
   }) : super(
-          tipo: 'Filme',
+          tipo: 'Série',
         );
 }

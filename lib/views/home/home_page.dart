@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:app_streaming/views/home/build_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:app_streaming/views/home/build_section.dart';
 import 'package:app_streaming/views/home/build_banner_top_section.dart';
@@ -9,31 +10,56 @@ class HomePage extends StatefulWidget {
   const HomePage({
     super.key,
   });
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  String _selectedCategory = 'Todas';
+
+  final List<String> _categories = [
+    'Todas',
+    'Ação',
+    'Comédia',
+    'Drama',
+    'Suspense',
+    'Ficção Científica',
+  ];
 
   final List<Widget> _pages = [
     SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 120),
+          const SizedBox(height: 40),
+          buildCategories(
+              categories: ['Filmes', 'Séries', 'Categorias'],
+              selectedCategory: '',
+              onCategorySelected: (String category) {}),
           buildBannerTopSection(),
-          buildSection(title: 'Recomendados'),
-          buildSection(title: 'Em Alta'),
+          const BuildSection(title: 'Recomendados para você'),
           buildTopSection(),
-          buildSection(title: 'Seus Favoritos'),
           comingSoonSection(),
         ],
       ),
     ),
-    const Center(child: Text('Movies', style: TextStyle(color: Colors.white))),
-    const Center(child: Text('Series', style: TextStyle(color: Colors.white))),
-    const Center(child: Text('Perfil', style: TextStyle(color: Colors.white))),
+    const Center(
+        child: Text('Minha Lista',
+            style: TextStyle(
+              color: Colors.white,
+            ))),
+    const Center(
+        child: Text('Baixados',
+            style: TextStyle(
+              color: Colors.white,
+            ))),
+    const Center(
+        child: Text('Configurações',
+            style: TextStyle(
+              color: Colors.white,
+            ))),
   ];
 
   void _onItemTapped(int index) {
@@ -80,7 +106,39 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: _pages[_selectedIndex],
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.6),
+              border: Border.all(color: Colors.white),
+            ),
+            child: DropdownButton<String>(
+              value: _selectedCategory,
+              dropdownColor: Colors.black,
+              icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
+              underline: Container(),
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedCategory = newValue!;
+                });
+              },
+              items:
+                  _categories.map<DropdownMenuItem<String>>((String category) {
+                return DropdownMenuItem<String>(
+                  value: category,
+                  child: Text(category),
+                );
+              }).toList(),
+            ),
+          ),
+          Expanded(
+            child: _pages[_selectedIndex],
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black,
         selectedItemColor: Colors.white,
@@ -93,16 +151,16 @@ class _HomePageState extends State<HomePage> {
             label: 'Início',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.movie),
-            label: 'Filmes',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.tv),
-            label: 'Séries',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.list),
             label: 'Lista',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.download),
+            label: 'Baixados',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Ajustes',
           ),
         ],
       ),
