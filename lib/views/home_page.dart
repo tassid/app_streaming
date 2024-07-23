@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -6,9 +8,17 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        flexibleSpace: ClipRect(
+          child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+              child: Container(
+                color: Colors.transparent,
+              )),
+        ),
+        backgroundColor: Colors.black.withOpacity(0.6),
         elevation: 0,
         title: const Text(
           'Para Você',
@@ -36,6 +46,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 120),
             _buildTopSection(),
             _buildSection(title: 'Recomendados'),
             _buildSection(title: 'Em Alta'),
@@ -51,7 +62,7 @@ class HomePage extends StatelessWidget {
 
   Widget _buildTopSection() {
     return SizedBox(
-      height: 500,
+      height: 450,
       child: Stack(
         children: [
           ClipRRect(

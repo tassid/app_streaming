@@ -1,71 +1,28 @@
+import 'package:app_streaming/models/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:math';
 
 class WhosWatchingPage extends StatefulWidget {
   const WhosWatchingPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _WhosWatchingPageState createState() => _WhosWatchingPageState();
+  State<WhosWatchingPage> createState() => _WhosWatchingPageState();
 }
 
 class _WhosWatchingPageState extends State<WhosWatchingPage> {
-  List<Map<String, dynamic>> profiles = [
-    {'name': 'Perfil 1', 'color': Colors.red},
+  List<UserProfile> profiles = [
+    UserProfile(name: 'Perfil 1'),
   ];
-
-  double _calculateLuminance(Color color) {
-    final r = color.red / 255;
-    final g = color.green / 255;
-    final b = color.blue / 255;
-
-    final rLuminance =
-        (r <= 0.03928) ? r / 12.92 : pow((r + 0.055) / 1.055, 2.4);
-    final gLuminance =
-        (g <= 0.03928) ? g / 12.92 : pow((g + 0.055) / 1.055, 2.4);
-    final bLuminance =
-        (b <= 0.03928) ? b / 12.92 : pow((b + 0.055) / 1.055, 2.4);
-
-    return 0.2126 * rLuminance + 0.7152 * gLuminance + 0.0722 * bLuminance;
-  }
-
-  double _calculateContrast(Color color1, Color color2) {
-    final luminance1 = _calculateLuminance(color1);
-    final luminance2 = _calculateLuminance(color2);
-
-    final light = max(luminance1, luminance2);
-    final dark = min(luminance1, luminance2);
-
-    return (light + 0.05) / (dark + 0.05);
-  }
-
-  bool _isColorContrastingWithWhite(Color color) {
-    return _calculateContrast(color, Colors.white) >= 4.5;
-  }
 
   void _addProfile() {
     if (profiles.length >= 5) {
       return;
     }
 
-    final Random random = Random();
-    Color randomColor = Colors.blue;
-    bool isColorUnique = false;
-
-    while (!isColorUnique) {
-      randomColor = Colors.primaries[random.nextInt(Colors.primaries.length)];
-
-      isColorUnique =
-          !profiles.any((profile) => profile['color'] == randomColor) &&
-              _isColorContrastingWithWhite(randomColor);
-    }
-
     setState(() {
-      profiles.add({
-        'name': 'Perfil ${profiles.length + 1}',
-        'color': randomColor,
-      });
+      profiles.add(UserProfile(
+        name: 'Perfil ${profiles.length + 1}',
+      ));
     });
   }
 
@@ -106,13 +63,13 @@ class _WhosWatchingPageState extends State<WhosWatchingPage> {
                 onTap: () {
                   Navigator.of(context).pushReplacementNamed(
                     '/home',
-                    arguments: profiles[index]['name'],
+                    arguments: profiles[index].name,
                   );
                 },
                 child: Column(
                   children: [
                     Card(
-                      color: profiles[index]['color'],
+                      color: profiles[index].color,
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
@@ -130,7 +87,7 @@ class _WhosWatchingPageState extends State<WhosWatchingPage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      profiles[index]['name'],
+                      profiles[index].name,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
