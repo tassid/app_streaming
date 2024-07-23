@@ -1,4 +1,4 @@
-import 'package:app_streaming/views/home_page.dart';
+import 'package:app_streaming/views/home/home_page.dart';
 import 'package:app_streaming/views/login/login_page.dart';
 import 'package:app_streaming/views/onboarding/onboarding_page.dart';
 import 'package:app_streaming/views/onboarding/splash_page.dart';
