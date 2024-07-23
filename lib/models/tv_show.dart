@@ -1,9 +1,9 @@
-import 'package:app_streaming/models/contents.dart';
+import 'package:app_streaming/models/content.dart';
 
-class Series extends Contents {
+class TvShow extends Content {
   final String finalizada;
 
-  Series({
+  TvShow({
     required super.titulo,
     required super.descricao,
     required super.urlCapa,

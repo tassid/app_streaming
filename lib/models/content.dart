@@ -1,4 +1,4 @@
-class Contents {
+class Content {
   String titulo;
   String tipo;
   String descricao;
@@ -6,7 +6,7 @@ class Contents {
   String urlVideo;
   DateTime dataLancamento;
 
-  Contents({
+  Content({
     required this.titulo,
     required this.tipo,
     required this.descricao,

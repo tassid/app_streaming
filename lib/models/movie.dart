@@ -1,9 +1,9 @@
-import 'package:app_streaming/models/contents.dart';
+import 'package:app_streaming/models/content.dart';
 
-class Movies extends Contents {
+class Movie extends Content {
   final String diretor;
 
-  Movies({
+  Movie({
     required super.titulo,
     required super.descricao,
     required super.urlCapa,
