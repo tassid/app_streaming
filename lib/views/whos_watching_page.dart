@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math';
 
 class WhosWatchingPage extends StatefulWidget {
@@ -112,9 +113,19 @@ class _WhosWatchingPageState extends State<WhosWatchingPage> {
                   children: [
                     Card(
                       color: profiles[index]['color'],
-                      child: const SizedBox(
-                        width: 100,
-                        height: 100,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          const SizedBox(
+                            width: 100,
+                            height: 100,
+                          ),
+                          SvgPicture.asset(
+                            'assets/icons/profile_icon.svg', // Substitua pelo caminho do seu arquivo SVG
+                            width: 50,
+                            height: 50,
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -135,10 +146,20 @@ class _WhosWatchingPageState extends State<WhosWatchingPage> {
                   children: [
                     Card(
                       color: Colors.grey[700],
-                      child: const SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: Icon(Icons.add, color: Colors.white),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          const SizedBox(
+                            width: 100,
+                            height: 100,
+                            child: Icon(Icons.add, color: Colors.white),
+                          ),
+                          SvgPicture.asset(
+                            'assets/icons/add_icon.svg', // Substitua pelo caminho do seu arquivo SVG
+                            width: 50,
+                            height: 50,
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(
@@ -157,11 +178,6 @@ class _WhosWatchingPageState extends State<WhosWatchingPage> {
             }
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addProfile,
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add),
       ),
     );
   }

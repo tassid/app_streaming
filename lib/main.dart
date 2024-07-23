@@ -89,7 +89,7 @@ void main() {
         "/onboarding": (_) => const OnboardingPage(),
         "/login": (_) => const LoginPage(),
         "/home": (_) => const HomePage(),
-        "/whoswatching": (_) => WhosWatchingPage(),
+        "/whoswatching": (_) => const WhosWatchingPage(),
       },
     ),
   );
