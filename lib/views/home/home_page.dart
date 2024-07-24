@@ -1,9 +1,8 @@
-import 'dart:ui';
+import 'package:app_streaming/views/home/home_app_bar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:app_streaming/views/home/build_section.dart';
-import 'package:app_streaming/views/home/coming_soon_section.dart';
-import 'package:app_streaming/views/home/build_banner_top_section.dart';
-import 'package:app_streaming/views/home/categories_bar.dart'; // Import the categoriesBar
+import 'package:app_streaming/views/home/sections/build_section.dart';
+import 'package:app_streaming/views/home/sections/coming_soon_section.dart';
+import 'package:app_streaming/views/home/sections/build_banner_top_section.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -49,39 +48,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        flexibleSpace: ClipRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-            child: Container(
-              color: Colors.transparent,
-            ),
-          ),
-        ),
-        backgroundColor: Colors.black.withOpacity(0.6),
-        elevation: 0,
-        title: const Text(
-          'Para Você',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.cast),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.account_circle),
-            onPressed: () {},
-          ),
-        ],
-      ),
+      appBar: const HomeAppBarWidget(),
       body: Column(
         children: [
           Expanded(

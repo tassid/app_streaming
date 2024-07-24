@@ -8,7 +8,11 @@ Widget buildBannerTopSection() {
         child: Stack(
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(
+                  20.0,
+                ),
+              ),
               child: Image.asset(
                 'assets/fundo_banner.jpg',
                 width: double.infinity,
