@@ -77,7 +77,10 @@ class CategoriesPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Icon(Icons.close, color: Colors.black),
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ],
@@ -92,7 +95,7 @@ void showCategoriesPage(BuildContext context) {
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
-    barrierLabel: 'Dismiss',
+    barrierLabel: 'Fechar',
     pageBuilder: (context, _, __) {
       return const CategoriesPage();
     },
