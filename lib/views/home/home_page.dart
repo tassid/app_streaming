@@ -1,4 +1,4 @@
-import 'package:app_streaming/views/home/home_app_bar.dart';
+import 'package:app_streaming/views/home/bar/home_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:app_streaming/views/home/sections/build_section.dart';
 import 'package:app_streaming/views/home/sections/coming_soon_section.dart';

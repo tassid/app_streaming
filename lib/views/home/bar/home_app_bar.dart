@@ -1,4 +1,4 @@
-import 'package:app_streaming/views/home/categories_bar.dart';
+import 'package:app_streaming/views/home/bar/categories_bar.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
