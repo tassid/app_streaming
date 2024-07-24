@@ -1,7 +1,9 @@
 class Genre {
   final String name;
 
-  Genre(this.name);
+  Genre(
+    this.name,
+  );
 }
 
 List<Genre> genres = [
