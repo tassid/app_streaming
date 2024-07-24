@@ -39,9 +39,18 @@ Widget categoriesBar({
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),
               ),
-              child: const Text(
-                'Categorias',
-                style: TextStyle(color: Colors.white),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Categorias',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Icon(
+                    Icons.arrow_drop_down,
+                    color: Colors.white,
+                  ),
+                ],
               ),
             ),
           ],
