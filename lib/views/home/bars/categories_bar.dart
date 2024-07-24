@@ -1,3 +1,4 @@
+import 'package:app_streaming/views/home/categories_page.dart';
 import 'package:flutter/material.dart';
 
 Widget categoriesBar({
@@ -44,7 +45,10 @@ Widget categoriesBar({
               const SizedBox(width: 8),
               OutlinedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed('/categories');
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => const CategoriesPage(),
+                  );
                 },
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Colors.white),

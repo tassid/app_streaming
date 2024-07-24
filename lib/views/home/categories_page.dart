@@ -6,9 +6,9 @@ class CategoriesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Dialog(
       backgroundColor: Colors.transparent,
-      body: Stack(
+      child: Stack(
         children: [
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
