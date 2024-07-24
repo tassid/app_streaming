@@ -1,15 +1,12 @@
 import 'dart:ui';
-import 'package:app_streaming/views/home/build_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:app_streaming/views/home/build_section.dart';
-import 'package:app_streaming/views/home/build_banner_top_section.dart';
-import 'package:app_streaming/views/home/build_top_section.dart';
 import 'package:app_streaming/views/home/coming_soon_section.dart';
+import 'package:app_streaming/views/home/build_banner_top_section.dart';
+import 'package:app_streaming/views/home/categories_bar.dart'; // Import the categoriesBar
 
 class HomePage extends StatefulWidget {
-  const HomePage({
-    super.key,
-  });
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -17,49 +14,28 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  String _selectedCategory = 'Todas';
-
-  final List<String> _categories = [
-    'Todas',
-    'Ação',
-    'Comédia',
-    'Drama',
-    'Suspense',
-    'Ficção Científica',
-  ];
 
   final List<Widget> _pages = [
     SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 40),
-          buildCategories(
-              categories: ['Filmes', 'Séries', 'Categorias'],
-              selectedCategory: '',
-              onCategorySelected: (String category) {}),
+          const SizedBox(height: 120),
           buildBannerTopSection(),
           const BuildSection(title: 'Recomendados para você'),
-          buildTopSection(),
           comingSoonSection(),
         ],
       ),
     ),
     const Center(
-        child: Text('Minha Lista',
-            style: TextStyle(
-              color: Colors.white,
-            ))),
+      child: Text('Minha Lista', style: TextStyle(color: Colors.white)),
+    ),
     const Center(
-        child: Text('Baixados',
-            style: TextStyle(
-              color: Colors.white,
-            ))),
+      child: Text('Baixados', style: TextStyle(color: Colors.white)),
+    ),
     const Center(
-        child: Text('Configurações',
-            style: TextStyle(
-              color: Colors.white,
-            ))),
+      child: Text('Configurações', style: TextStyle(color: Colors.white)),
+    ),
   ];
 
   void _onItemTapped(int index) {
@@ -108,32 +84,6 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.6),
-              border: Border.all(color: Colors.white),
-            ),
-            child: DropdownButton<String>(
-              value: _selectedCategory,
-              dropdownColor: Colors.black,
-              icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
-              underline: Container(),
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedCategory = newValue!;
-                });
-              },
-              items:
-                  _categories.map<DropdownMenuItem<String>>((String category) {
-                return DropdownMenuItem<String>(
-                  value: category,
-                  child: Text(category),
-                );
-              }).toList(),
-            ),
-          ),
           Expanded(
             child: _pages[_selectedIndex],
           ),
