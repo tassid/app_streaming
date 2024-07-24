@@ -1,4 +1,4 @@
-import 'package:app_streaming/views/home/home_app_bar_widget.dart';
+import 'package:app_streaming/views/home/home_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:app_streaming/views/home/sections/build_section.dart';
 import 'package:app_streaming/views/home/sections/coming_soon_section.dart';
@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 120),
+          const SizedBox(height: 220),
           buildBannerTopSection(),
           const BuildSection(title: 'Recomendados para você'),
           comingSoonSection(),
