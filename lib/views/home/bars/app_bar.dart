@@ -2,9 +2,12 @@ import 'package:app_streaming/views/home/bars/categories_bar.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
-class HomeAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppBarWidget({
+class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
+  final String title;
+
+  const AppBarWidget({
     super.key,
+    required this.title,
   });
 
   @override
@@ -36,9 +39,9 @@ class HomeAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Para Você',
-                        style: TextStyle(
+                      Text(
+                        title,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -64,7 +67,7 @@ class HomeAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                     ],
                   ),
                 ),
-                categoriesBar(),
+                categoriesBar(context: context),
               ],
             ),
           ),

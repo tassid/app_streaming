@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app_streaming/views/home/bars/home_app_bar.dart';
+import 'package:app_streaming/views/home/bars/app_bar.dart';
 import 'package:app_streaming/views/home/sections/build_section.dart';
 import 'package:app_streaming/views/home/sections/coming_soon_section.dart';
 import 'package:app_streaming/views/home/sections/build_banner_top_section.dart';
@@ -57,7 +57,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
-      appBar: const HomeAppBarWidget(),
+      appBar: const AppBarWidget(
+        title: 'Para Você',
+      ),
       body: Column(
         children: [
           Expanded(

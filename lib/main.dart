@@ -1,4 +1,7 @@
+import 'package:app_streaming/views/home/categories_page.dart';
 import 'package:app_streaming/views/home/home_page.dart';
+import 'package:app_streaming/views/home/movies_page.dart';
+import 'package:app_streaming/views/home/tvshows_page.dart';
 import 'package:app_streaming/views/login/login_page.dart';
 import 'package:app_streaming/views/onboarding/onboarding_page.dart';
 import 'package:app_streaming/views/onboarding/splash_page.dart';
@@ -90,6 +93,9 @@ void main() {
         "/login": (_) => const LoginPage(),
         "/home": (_) => const HomePage(),
         "/whoswatching": (_) => const WhosWatchingPage(),
+        "/movies": (_) => const MoviePage(),
+        "/tvshows": (_) => const TvShowsPage(),
+        "/categories": (_) => const CategoriesPage(),
       },
     ),
   );

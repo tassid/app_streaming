@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 Widget categoriesBar({
   VoidCallback? onCategoriesPressed,
+  required BuildContext context,
 }) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -9,51 +10,64 @@ Widget categoriesBar({
       onTap: onCategoriesPressed,
       child: Align(
         alignment: Alignment.centerLeft,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            OutlinedButton(
-              onPressed: onCategoriesPressed,
-              style: OutlinedButton.styleFrom(
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            canvasColor: Colors.transparent,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ChoiceChip(
+                label: const Text('Filmes'),
+                selected: false,
+                onSelected: (bool selected) {},
+                labelStyle: const TextStyle(color: Colors.white),
+                backgroundColor: Colors.transparent,
+                selectedColor: Colors.grey.shade800,
                 side: const BorderSide(color: Colors.white),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
               ),
-              child: const Text(
-                'Filmes',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            const SizedBox(width: 8),
-            OutlinedButton(
-              onPressed: onCategoriesPressed,
-              style: OutlinedButton.styleFrom(
+              const SizedBox(width: 8),
+              ChoiceChip(
+                label: const Text('Séries'),
+                selected: false,
+                onSelected: (bool selected) {},
+                labelStyle: const TextStyle(color: Colors.white),
+                selectedColor: Colors.grey.shade800,
                 side: const BorderSide(color: Colors.white),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
               ),
-              child: const Text(
-                'Séries',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            const SizedBox(width: 8),
-            OutlinedButton(
-              onPressed: onCategoriesPressed,
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.white),
-              ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Categorias',
-                    style: TextStyle(color: Colors.white),
+              const SizedBox(width: 8),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/categories');
+                },
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Colors.white),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
-                  Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.white,
-                  ),
-                ],
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Categorias',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     ),

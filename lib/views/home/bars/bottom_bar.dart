@@ -19,7 +19,10 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         flexibleSpace: ClipRect(
           child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+              filter: ImageFilter.blur(
+                sigmaX: 30,
+                sigmaY: 30,
+              ),
               child: Container(
                 color: Colors.transparent,
               )),
