@@ -1,20 +1,18 @@
-class Genre {
-  final String name;
+enum Category {
+  action('Ação'),
+  animation('Animação'),
+  adventure('Aventura'),
+  comedy('Comédia'),
+  documentary('Documentário'),
+  drama('Drama'),
+  sciFi('Ficção Científica'),
+  romance('Romance'),
+  suspense('Suspense'),
+  horror('Terror');
 
-  Genre(
-    this.name,
+  final String categoryName;
+
+  const Category(
+    this.categoryName,
   );
 }
-
-List<Genre> genres = [
-  Genre('Ação'),
-  Genre('Animação'),
-  Genre('Aventura'),
-  Genre('Comédia'),
-  Genre('Documentário'),
-  Genre('Drama'),
-  Genre('Ficção Científica'),
-  Genre('Romance'),
-  Genre('Suspense'),
-  Genre('Terror'),
-];

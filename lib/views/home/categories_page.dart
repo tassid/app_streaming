@@ -1,3 +1,4 @@
+import 'package:app_streaming/models/categories.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
@@ -21,53 +22,19 @@ class CategoriesPage extends StatelessWidget {
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(vertical: 50.0),
-                  children: [
-                    const ListTile(
+                  children: Category.values.map((category) {
+                    return ListTile(
                       title: Text(
-                        'Categorias',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold),
+                        category.categoryName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    const Divider(color: Colors.white),
-                    ListTile(
-                      title: const Text('Ação',
-                          style: TextStyle(color: Colors.white)),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      title: const Text('Aventura',
-                          style: TextStyle(color: Colors.white)),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      title: const Text('Clássicos',
-                          style: TextStyle(color: Colors.white)),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      title: const Text('Comédia',
-                          style: TextStyle(color: Colors.white)),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      title: const Text('Crime',
-                          style: TextStyle(color: Colors.white)),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      title: const Text('Drama',
-                          style: TextStyle(color: Colors.white)),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      title: const Text('Família',
-                          style: TextStyle(color: Colors.white)),
-                      onTap: () {},
-                    ),
-                  ],
+                      onTap: () {
+                        Navigator.of(context).pop(category);
+                      },
+                    );
+                  }).toList(),
                 ),
               ),
               Padding(
