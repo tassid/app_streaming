@@ -12,7 +12,7 @@ class CategoriesPage extends StatelessWidget {
       child: Stack(
         children: [
           BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
             child: Container(
               color: Colors.transparent,
             ),
