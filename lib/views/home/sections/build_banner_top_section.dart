@@ -1,6 +1,8 @@
+import 'package:app_streaming/views/home/episode_page.dart';
+import 'package:app_streaming/views/home/play_page.dart';
 import 'package:flutter/material.dart';
 
-Widget buildBannerTopSection() {
+Widget buildBannerTopSection(BuildContext context) {
   return Column(
     children: [
       SizedBox(
@@ -51,7 +53,17 @@ Widget buildBannerTopSection() {
                       children: [
                         Expanded(
                           child: ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => const PlayPage(
+                                          type: 'series',
+                                          title: 'Title of Content',
+                                          description:
+                                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac libero at nunc ultricies aliquam. Donec nec nisl nec nunc ultricies aliquam. Sed ac libero at nunc ultricies aliquam. Donec nec nisl nec nunc ultricies aliquam.',
+                                        )),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
                               minimumSize: const Size(0, 48),

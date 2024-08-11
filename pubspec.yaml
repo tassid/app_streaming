@@ -13,6 +13,7 @@ dependencies:
   flutter_svg: ^2.0.10+1  
   cupertino_icons: ^1.0.6
   url_launcher: ^6.3.0
+  youtube_player_flutter: ^8.0.0
   
 dev_dependencies:
   flutter_test:
@@ -38,3 +39,4 @@ flutter:
     - assets/image_12.png
     - assets/image_13.png
     - assets/fundo_banner.jpg
+    - assets/poster.jpg

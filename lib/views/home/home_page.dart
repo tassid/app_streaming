@@ -14,37 +14,49 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 210),
-          buildBannerTopSection(),
-          const BuildSection(title: 'Recomendados para você'),
-          comingSoonSection(),
-        ],
+  final List<Widget> _pages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _pages.add(
+      SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 210),
+            buildBannerTopSection(context),
+            const BuildSection(title: 'Recomendados para você'),
+            comingSoonSection(),
+          ],
+        ),
       ),
-    ),
-    const Center(
-      child: Text('Minha Lista',
-          style: TextStyle(
-            color: Colors.white,
-          )),
-    ),
-    const Center(
-      child: Text('Baixados',
-          style: TextStyle(
-            color: Colors.white,
-          )),
-    ),
-    const Center(
-      child: Text('Configurações',
-          style: TextStyle(
-            color: Colors.white,
-          )),
-    ),
-  ];
+    );
+    _pages.add(
+      const Center(
+        child: Text('Minha Lista',
+            style: TextStyle(
+              color: Colors.white,
+            )),
+      ),
+    );
+    _pages.add(
+      const Center(
+        child: Text('Baixados',
+            style: TextStyle(
+              color: Colors.white,
+            )),
+      ),
+    );
+    _pages.add(
+      const Center(
+        child: Text('Configurações',
+            style: TextStyle(
+              color: Colors.white,
+            )),
+      ),
+    );
+  }
 
   void _onItemTapped(int index) {
     setState(() {
