@@ -48,12 +48,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var isFirstPage = _selectedIndex == 0;
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
-      appBar: const AppBarWidget(
-        title: 'Para Você',
-      ),
+      appBar: isFirstPage ? const AppBarWidget(title: 'Para Você') : null,
       body: Column(
         children: [
           Expanded(
