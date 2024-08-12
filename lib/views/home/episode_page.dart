@@ -32,7 +32,7 @@ class _EpisodePageState extends State<EpisodePage> {
         child: Stack(
           children: [
             Container(
-              color: Colors.black.withOpacity(0.8),
+              color: Colors.black.withOpacity(0.85),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

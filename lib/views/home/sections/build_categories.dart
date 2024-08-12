@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-// Define um tipo para o callback que atualiza a categoria selecionada
 typedef OnCategorySelected = void Function(String category);
 
 Widget buildCategories({

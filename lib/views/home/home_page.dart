@@ -1,8 +1,11 @@
+import 'package:app_streaming/views/home/downloads_page.dart';
+import 'package:app_streaming/views/home/my_list_page.dart';
+import 'package:app_streaming/views/home/sections/build_banner_top_section.dart';
+import 'package:app_streaming/views/home/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:app_streaming/views/home/bars/app_bar.dart';
 import 'package:app_streaming/views/home/sections/build_section.dart';
 import 'package:app_streaming/views/home/sections/coming_soon_section.dart';
-import 'package:app_streaming/views/home/sections/build_banner_top_section.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,37 +28,16 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 210),
-            buildBannerTopSection(context),
+            BannerTopSection(),
             const BuildSection(title: 'Recomendados para você'),
             comingSoonSection(),
           ],
         ),
       ),
     );
-    _pages.add(
-      const Center(
-        child: Text('Minha Lista',
-            style: TextStyle(
-              color: Colors.white,
-            )),
-      ),
-    );
-    _pages.add(
-      const Center(
-        child: Text('Baixados',
-            style: TextStyle(
-              color: Colors.white,
-            )),
-      ),
-    );
-    _pages.add(
-      const Center(
-        child: Text('Configurações',
-            style: TextStyle(
-              color: Colors.white,
-            )),
-      ),
-    );
+    _pages.add(const MyListPage());
+    _pages.add(const DownloadsPage());
+    _pages.add(const SettingsPage());
   }
 
   void _onItemTapped(int index) {
