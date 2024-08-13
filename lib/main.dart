@@ -85,7 +85,7 @@ void main() {
           selectionHandleColor: Colors.red,
         ),
       ),
-      initialRoute: "/home",
+      initialRoute: "/",
       routes: {
         "/": (_) => const SplashPage(),
         "/onboarding": (_) => const OnboardingPage(),
