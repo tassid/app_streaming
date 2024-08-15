@@ -18,6 +18,7 @@ Widget categoriesBar({
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              /*
               ChoiceChip(
                 label: const Text('Filmes'),
                 selected: false,
@@ -41,7 +42,7 @@ Widget categoriesBar({
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0),
                 ),
-              ),
+              ),*/
               const SizedBox(width: 8),
               OutlinedButton(
                 onPressed: () {

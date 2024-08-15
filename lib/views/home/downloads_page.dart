@@ -12,7 +12,7 @@ class DownloadsPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: const AppBarExtra(title: "Downloads"),
+      appBar: const AppBarExtra(title: "Baixados"),
       body: Container(
         width: double.infinity,
         color: Colors.black54,
@@ -60,7 +60,6 @@ class DownloadsPage extends StatelessWidget {
                             fontSize: 14.0,
                           ),
                         ),
-                        // Add more details or actions if needed
                       ],
                     ),
                   ),

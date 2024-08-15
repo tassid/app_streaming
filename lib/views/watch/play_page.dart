@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:app_streaming/views/home/episode_page.dart';
+import 'package:app_streaming/views/watch/episode_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -155,7 +155,7 @@ class _PlayPageState extends State<PlayPage> {
                         onPressed: _playMovie,
                       ),
                       const SizedBox(height: 10),
-                      if (widget.type == 'series') ...[
+                      /*if (widget.type == 'series') ...[
                         _buildButton(
                           icon: Icons.list,
                           label: 'Ver Episódios',
@@ -170,7 +170,7 @@ class _PlayPageState extends State<PlayPage> {
                           },
                         ),
                         const SizedBox(height: 10),
-                      ],
+                      ],*/
                       _buildButton(
                         icon: Icons.play_circle_outline,
                         label: 'Ver Trailer',

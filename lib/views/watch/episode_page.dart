@@ -74,8 +74,7 @@ class _EpisodePageState extends State<EpisodePage> {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount:
-                        10, // Replace with the actual episode count for the selected season
+                    itemCount: 10,
                     itemBuilder: (context, index) {
                       return ListTile(
                         leading:
