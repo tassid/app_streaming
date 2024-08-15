@@ -1,16 +1,22 @@
-import 'package:app_streaming/models/content.dart';
-
-class Movie extends Content {
-  final String diretor;
+class Movie {
+  final int id;
+  final String title;
+  final String overview;
+  final String posterPath;
 
   Movie({
-    required super.titulo,
-    required super.descricao,
-    required super.urlCapa,
-    required super.urlVideo,
-    required super.dataLancamento,
-    required this.diretor,
-  }) : super(
-          tipo: 'Filme',
-        );
+    required this.id,
+    required this.title,
+    required this.overview,
+    required this.posterPath,
+  });
+
+  factory Movie.fromJson(Map<String, dynamic> json) {
+    return Movie(
+      id: json['id'],
+      title: json['title'],
+      overview: json['overview'],
+      posterPath: json['poster_path'],
+    );
+  }
 }

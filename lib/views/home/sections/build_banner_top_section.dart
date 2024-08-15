@@ -1,4 +1,4 @@
-import 'package:app_streaming/views/home/play_page.dart';
+import 'package:app_streaming/views/watch/play_page.dart';
 import 'package:flutter/material.dart';
 
 class BannerTopSection extends StatefulWidget {
@@ -64,9 +64,8 @@ class _BannerTopSectionState extends State<BannerTopSection> {
                                   MaterialPageRoute(
                                     builder: (context) => const PlayPage(
                                       type: 'series',
-                                      title: 'Title of Content',
-                                      description:
-                                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac libero at nunc ultricies aliquam. Donec nec nisl nec nunc ultricies aliquam. Sed ac libero at nunc ultricies aliquam. Donec nec nisl nec nunc ultricies aliquam.',
+                                      title: 'Title',
+                                      description: 'Lorem ipsum',
                                     ),
                                   ),
                                 );
