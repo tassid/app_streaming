@@ -90,7 +90,7 @@ void main() {
         "/": (_) => const SplashPage(),
         "/onboarding": (_) => const OnboardingPage(),
         "/login": (_) => const LoginPage(),
-        "/home": (_) => const HomePage(),
+        "/home": (_) => HomePage(),
         "/whoswatching": (_) => const WhosWatchingPage(),
         "/movies": (_) => const MoviePage(),
         "/tvshows": (_) => const TvShowsPage(),

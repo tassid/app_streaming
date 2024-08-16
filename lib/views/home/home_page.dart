@@ -1,89 +1,91 @@
-import 'package:app_streaming/views/home/downloads_page.dart';
-import 'package:app_streaming/views/home/my_list_page.dart';
-import 'package:app_streaming/views/home/sections/build_banner_top_section.dart';
-import 'package:app_streaming/views/home/settings_page.dart';
 import 'package:flutter/material.dart';
+import 'package:app_streaming/models/movie.dart';
+import 'package:app_streaming/services/api_service.dart';
 import 'package:app_streaming/views/home/bars/app_bar.dart';
-import 'package:app_streaming/views/home/sections/build_section.dart';
-import 'package:app_streaming/views/home/sections/coming_soon_section.dart';
+import 'package:app_streaming/views/watch/play_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
   @override
-  State<HomePage> createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-
-  final List<Widget> _pages = [];
+  final ApiService _apiService = ApiService();
+  late Future<List<Movie>> _popularMovies;
 
   @override
   void initState() {
     super.initState();
-    _pages.add(
-      SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 210),
-            BannerTopSection(),
-            const BuildSection(title: 'Recomendados para você'),
-            comingSoonSection(),
-          ],
-        ),
-      ),
-    );
-    _pages.add(const MyListPage());
-    _pages.add(const DownloadsPage());
-    _pages.add(const SettingsPage());
+    _popularMovies = _apiService.fetchMovies('popular');
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  Widget _buildMovieCarousel(Future<List<Movie>> moviesFuture) {
+    return SizedBox(
+      height: 200,
+      child: FutureBuilder<List<Movie>>(
+        future: moviesFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No movies available'));
+          } else {
+            final movies = snapshot.data!;
+            return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: movies.length,
+              itemBuilder: (context, index) {
+                final movie = movies[index];
+
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PlayPage(
+                          movieId: movie.id,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Container(
+                      width: 120,
+                      height: 160,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(movie.getPosterUrl()),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    var isFirstPage = _selectedIndex == 0;
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Colors.black,
-      appBar: isFirstPage ? const AppBarWidget(title: 'Para Você') : null,
-      body: Column(
-        children: [
-          Expanded(
-            child: _pages[_selectedIndex],
-          ),
-        ],
+      appBar: const AppBarWidget(
+        title: 'Para Você',
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Início',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Lista',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.download),
-            label: 'Baixados',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Ajustes',
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildMovieCarousel(_popularMovies),
+          ],
+        ),
       ),
     );
   }

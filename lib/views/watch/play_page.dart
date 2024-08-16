@@ -1,5 +1,6 @@
 import 'dart:ui';
-import 'package:app_streaming/views/watch/episode_page.dart';
+import 'package:app_streaming/models/movie.dart';
+import 'package:app_streaming/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -13,32 +14,29 @@ void _exitFullScreen() {
 }
 
 class PlayPage extends StatefulWidget {
-  final String type; // Could be "movie" or "series"
-  final String title;
-  final String description;
+  final int movieId;
 
-  const PlayPage({
-    super.key,
-    required this.type,
-    required this.title,
-    required this.description,
-  });
+  const PlayPage({super.key, required this.movieId});
 
   @override
   _PlayPageState createState() => _PlayPageState();
 }
 
 class _PlayPageState extends State<PlayPage> {
+  final ApiService _apiService = ApiService();
+  late Future<Movie> _movieDetailsFuture;
+  late Future<List<Movie>> _relatedMoviesFuture;
   bool _isWatchingMovie = false;
   bool _isLiked = false;
   bool _isDisliked = false;
   bool _isInList = false;
 
-  final List<String> _relatedMovies = [
-    'assets/related_movie_1.jpg',
-    'assets/related_movie_2.jpg',
-    'assets/related_movie_3.jpg',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _movieDetailsFuture = _apiService.fetchMovieDetails(widget.movieId);
+    _relatedMoviesFuture = _apiService.fetchRelatedMovies(widget.movieId);
+  }
 
   void _toggleLike() {
     setState(() {
@@ -64,17 +62,13 @@ class _PlayPageState extends State<PlayPage> {
     setState(() {
       _isWatchingMovie = true;
       _enterFullScreen();
-      // TODO: Add your logic to play the movie
+      // TODO: Adicionar a lógica para reproduzir o filme
     });
   }
 
   void _viewTrailer() {
     _enterFullScreen();
-    // TODO: Add your logic to view the trailer in fullscreen
-  }
-
-  void _viewEpisodes() {
-    // TODO: Add your logic to navigate to the episodes list
+    // TODO: Adicionar a lógica para reproduzir o trailer em tela cheia
   }
 
   @override
@@ -85,169 +79,226 @@ class _PlayPageState extends State<PlayPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
+            _exitFullScreen();
           },
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       extendBodyBehindAppBar: true,
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/fundo_banner.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-              child: Container(
-                color: Colors.black.withOpacity(0.5),
-              ),
-            ),
-          ),
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+      body: FutureBuilder<Movie>(
+        future: _movieDetailsFuture,
+        builder: (context, movieSnapshot) {
+          if (movieSnapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (movieSnapshot.hasError) {
+            return Center(child: Text('Error: ${movieSnapshot.error}'));
+          } else if (movieSnapshot.hasData) {
+            final movie = movieSnapshot.data!;
+
+            // Pegando o primeiro gênero ou mostrando "Desconhecido"
+            final genreName = movie.genres != null && movie.genres.isNotEmpty
+                ? movie.genres.first.name
+                : "Desconhecido";
+
+            return Stack(
               children: [
-                const SizedBox(height: 110),
-                Center(
-                  child: Image.asset(
-                    'assets/poster.jpg',
-                    height: 250,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    widget.title,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                // Fundo com poster do filme
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(movie.getPosterUrl()),
+                      fit: BoxFit.cover,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    widget.description,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                    child: Container(
+                      color: Colors.black.withOpacity(0.85),
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                // Conteúdo da página
+                SingleChildScrollView(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      _buildButton(
-                        icon: Icons.play_arrow,
-                        label: 'Assistir Agora',
-                        backgroundColor: Colors.red,
-                        onPressed: _playMovie,
-                      ),
-                      const SizedBox(height: 10),
-                      /*if (widget.type == 'series') ...[
-                        _buildButton(
-                          icon: Icons.list,
-                          label: 'Ver Episódios',
-                          backgroundColor: Colors.transparent,
-                          borderColor: Colors.white,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const EpisodePage()),
-                            );
-                          },
+                      const SizedBox(height: 110),
+                      Center(
+                        child: Image.network(
+                          movie.getPosterUrl(),
+                          height: 250,
                         ),
-                        const SizedBox(height: 10),
-                      ],*/
-                      _buildButton(
-                        icon: Icons.play_circle_outline,
-                        label: 'Ver Trailer',
-                        backgroundColor: Colors.transparent,
-                        borderColor: Colors.white,
-                        onPressed: _viewTrailer,
                       ),
                       const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildIconButton(
-                            icon: _isLiked
-                                ? Icons.thumb_up
-                                : Icons.thumb_up_off_alt,
-                            onPressed: _toggleLike,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          movie.title,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
-                          const SizedBox(width: 20),
-                          _buildIconButton(
-                            icon: _isDisliked
-                                ? Icons.thumb_down
-                                : Icons.thumb_down_off_alt,
-                            onPressed: _toggleDislike,
-                          ),
-                          const SizedBox(width: 20),
-                          _buildIconButton(
-                            icon: _isInList
-                                ? Icons.check_circle
-                                : Icons.add_circle,
-                            onPressed: _toggleInList,
-                          ),
-                        ],
+                          textAlign: TextAlign.center,
+                        ),
                       ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          movie.overview,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white70,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          'Gênero: $genreName', // Exibindo o primeiro gênero
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white70,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Column(
+                          children: [
+                            _buildButton(
+                              icon: Icons.play_arrow,
+                              label: 'Assistir Agora',
+                              backgroundColor: Colors.red,
+                              onPressed: _playMovie,
+                            ),
+                            const SizedBox(height: 10),
+                            _buildButton(
+                              icon: Icons.play_circle_outline,
+                              label: 'Ver Trailer',
+                              backgroundColor: Colors.transparent,
+                              borderColor: Colors.white,
+                              onPressed: _viewTrailer,
+                            ),
+                            const SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _buildIconButton(
+                                  icon: _isLiked
+                                      ? Icons.thumb_up
+                                      : Icons.thumb_up_off_alt,
+                                  onPressed: _toggleLike,
+                                ),
+                                const SizedBox(width: 20),
+                                _buildIconButton(
+                                  icon: _isDisliked
+                                      ? Icons.thumb_down
+                                      : Icons.thumb_down_off_alt,
+                                  onPressed: _toggleDislike,
+                                ),
+                                const SizedBox(width: 20),
+                                _buildIconButton(
+                                  icon: _isInList
+                                      ? Icons.check_circle
+                                      : Icons.add_circle,
+                                  onPressed: _toggleInList,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      _buildRelatedMoviesCarousel(),
+                      const SizedBox(height: 40),
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Recomendados para você',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  height: 180,
-                  child: PageView.builder(
-                    itemCount: _relatedMovies.length,
-                    controller: PageController(viewportFraction: 0.6),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12.0),
-                          child: Image.asset(
-                            'image_'[index],
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 30),
               ],
-            ),
-          ),
-        ],
+            );
+          } else {
+            return const Center(child: Text('No data available'));
+          }
+        },
       ),
+    );
+  }
+
+  Widget _buildRelatedMoviesCarousel() {
+    return FutureBuilder<List<Movie>>(
+      future: _relatedMoviesFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (snapshot.hasData) {
+          final relatedMovies = snapshot.data ?? [];
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  'Filmes Relacionados',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 300, // Ajuste a altura para evitar overflow
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: relatedMovies.length,
+                  itemBuilder: (context, index) {
+                    final movie = relatedMovies[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PlayPage(movieId: movie.id),
+                            ),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                movie.getPosterUrl(),
+                                height: 200, // Diminuir a altura da imagem
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            const SizedBox(width: 100),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        } else {
+          return const Center(child: Text('No related movies available'));
+        }
+      },
     );
   }
 

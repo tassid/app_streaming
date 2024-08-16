@@ -1,143 +1,106 @@
+import 'package:app_streaming/models/movie.dart';
+import 'package:app_streaming/services/api_service.dart';
+import 'package:app_streaming/views/home/bars/app_bar.dart';
 import 'package:app_streaming/views/watch/play_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class BannerTopSection extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _BannerTopSectionState createState() => _BannerTopSectionState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _BannerTopSectionState extends State<BannerTopSection> {
-  bool isAddedToList = false;
+class _HomePageState extends State<HomePage> {
+  final ApiService _apiService = ApiService();
+  late Future<List<Movie>> _popularMovies;
+  late Future<List<Movie>> _topRatedMovies;
+  late Future<List<Movie>> _upcomingMovies;
+
+  @override
+  void initState() {
+    super.initState();
+    _popularMovies = _apiService.fetchMovies('popular');
+    _topRatedMovies = _apiService.fetchMovies('top_rated');
+    _upcomingMovies = _apiService.fetchMovies('upcoming');
+  }
+
+  Widget _buildMovieCarousel(Future<List<Movie>> moviesFuture) {
+    return SizedBox(
+      height: 200,
+      child: FutureBuilder<List<Movie>>(
+        future: moviesFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No movies available'));
+          } else {
+            final movies = snapshot.data!;
+            return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: movies.length,
+              itemBuilder: (context, index) {
+                final movie = movies[index];
+                if (kDebugMode) {
+                  print(movie.getPosterUrl());
+                }
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PlayPage(
+                          movieId: movie.id,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Container(
+                      width: 120,
+                      height: 160,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(movie.getPosterUrl()),
+                          fit: BoxFit.cover,
+                          onError: (error, stackTrace) {
+                            if (kDebugMode) {
+                              print('Failed to load image: $error');
+                            }
+                          },
+                        ),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 450,
-          child: Stack(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(20.0),
-                ),
-                child: Image.asset(
-                  'assets/fundo_banner.jpg',
-                  width: double.infinity,
-                  height: 500,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-                child: Container(
-                  padding: const EdgeInsets.all(40.0),
-                  color: Colors.grey[900]?.withOpacity(0.6),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Spacer(),
-                      const Text(
-                        'Movie Title',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Text(
-                        'Genre 1 • Genre 2 • Genre 2',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const PlayPage(
-                                      type: 'series',
-                                      title: 'Title',
-                                      description: 'Lorem ipsum',
-                                    ),
-                                  ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                                minimumSize: const Size(0, 48),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                              ),
-                              icon: const Icon(
-                                Icons.play_arrow,
-                                color: Colors.white,
-                                size: 24,
-                              ),
-                              label: const Text(
-                                'Assistir',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                setState(() {
-                                  isAddedToList = !isAddedToList;
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: isAddedToList
-                                    ? Colors.grey[600]
-                                    : Colors.grey[800],
-                                minimumSize: const Size(0, 48),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                              ),
-                              icon: Icon(
-                                isAddedToList ? Icons.check : Icons.add,
-                                color: Colors.white,
-                                size: 24,
-                              ),
-                              label: Text(
-                                isAddedToList ? 'Adicionado' : 'Minha Lista',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+    return Scaffold(
+      appBar: const AppBarWidget(
+        title: 'Para Você',
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildMovieCarousel(_popularMovies),
+            _buildMovieCarousel(_topRatedMovies),
+            _buildMovieCarousel(_upcomingMovies),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

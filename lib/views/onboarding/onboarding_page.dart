@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:app_streaming/services/api_service.dart';
+import 'package:app_streaming/models/movie.dart';
 
-class OnboardingPage extends StatelessWidget {
+class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
+
+  @override
+  _OnboardingPageState createState() => _OnboardingPageState();
+}
+
+class _OnboardingPageState extends State<OnboardingPage> {
+  final ApiService _apiService = ApiService();
+  late Future<List<Movie>> _moviesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch popular movies
+    _moviesFuture = _apiService.fetchMovies('popular');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +46,28 @@ class OnboardingPage extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // Background with images
-          const Positioned.fill(
-            child: RowImages(),
+          // Background with images fetched from the API
+          Positioned.fill(
+            child: FutureBuilder<List<Movie>>(
+              future: _moviesFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (snapshot.hasData) {
+                  final movies = snapshot.data!;
+                  return _buildMovieGrid(movies);
+                } else {
+                  return const Center(child: Text('No data available'));
+                }
+              },
+            ),
           ),
           // Foreground content
           Positioned.fill(
             child: ColoredBox(
-              color: Colors.black.withOpacity(0.8),
+              color: Colors.black.withOpacity(0.85),
             ),
           ),
           Center(
@@ -99,45 +130,29 @@ class OnboardingPage extends StatelessWidget {
       ),
     );
   }
-}
 
-class RowImages extends StatelessWidget {
-  const RowImages({
-    super.key,
-  });
+  Widget _buildMovieGrid(List<Movie> movies) {
+    final displayedMovies = movies.take(12).toList();
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            children: List.generate(4, (index) {
-              return Expanded(
-                child: Image.asset('assets/image_${index + 1}.png'),
-              );
-            }),
+    return GridView.builder(
+      padding: const EdgeInsets.all(0),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        mainAxisSpacing: 0,
+        crossAxisSpacing: 0,
+        childAspectRatio: 0.7,
+      ),
+      itemCount: displayedMovies.length,
+      itemBuilder: (context, index) {
+        final movie = displayedMovies[index];
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.network(
+            movie.getPosterUrl(),
+            fit: BoxFit.cover,
           ),
-        ),
-        Expanded(
-          child: Column(
-            children: List.generate(5, (index) {
-              return Expanded(
-                child: Image.asset('assets/image_${index + 5}.png'),
-              );
-            }),
-          ),
-        ),
-        Expanded(
-          child: Column(
-            children: List.generate(4, (index) {
-              return Expanded(
-                child: Image.asset('assets/image_${index + 10}.png'),
-              );
-            }),
-          ),
-        ),
-      ],
+        );
+      },
     );
   }
 }
