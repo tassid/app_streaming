@@ -16,7 +16,10 @@ void _exitFullScreen() {
 class PlayPage extends StatefulWidget {
   final int movieId;
 
-  const PlayPage({super.key, required this.movieId});
+  const PlayPage({
+    super.key,
+    required this.movieId,
+  });
 
   @override
   _PlayPageState createState() => _PlayPageState();
@@ -30,6 +33,7 @@ class _PlayPageState extends State<PlayPage> {
   bool _isLiked = false;
   bool _isDisliked = false;
   bool _isInList = false;
+  bool _isExpanded = false;
 
   @override
   void initState() {
@@ -101,6 +105,12 @@ class _PlayPageState extends State<PlayPage> {
                 ? movie.genres.first.name
                 : "Desconhecido";
 
+            // Extract the release year from the release date
+            final releaseYear =
+                movie.releaseDate != null && movie.releaseDate!.isNotEmpty
+                    ? DateTime.parse(movie.releaseDate!).year.toString()
+                    : "Desconhecido";
+
             return Stack(
               children: [
                 // Fundo com poster do filme
@@ -143,11 +153,11 @@ class _PlayPageState extends State<PlayPage> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Text(
-                          movie.overview,
+                          '$releaseYear ∘ $genreName'
+                          ' ∘ ${movie.getVoteAverageText().length > 5 ? movie.getVoteAverageText().substring(0, 3) : movie.getVoteAverageText()}/10',
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white70,
@@ -158,15 +168,9 @@ class _PlayPageState extends State<PlayPage> {
                       const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text(
-                          'Gênero: $genreName', // Exibindo o primeiro gênero
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white70,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                        child: _buildDescription(movie.overview),
                       ),
+                      const SizedBox(height: 10),
                       const SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -228,6 +232,62 @@ class _PlayPageState extends State<PlayPage> {
           }
         },
       ),
+    );
+  }
+
+  Widget _buildDescription(String? description) {
+    if (description == null || description.isEmpty) {
+      return const Text(
+        'Não há sinopse disponível para este filme.',
+        style: TextStyle(
+          fontSize: 16,
+          color: Colors.white70,
+        ),
+        textAlign: TextAlign.center,
+      );
+    }
+
+    const textStyle = TextStyle(
+      fontSize: 16,
+      color: Colors.white70,
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Create a TextPainter to calculate if the text overflows
+        final textPainter = TextPainter(
+          text: TextSpan(text: description, style: textStyle),
+          maxLines: _isExpanded ? null : 3,
+          textDirection: TextDirection.ltr,
+        )..layout(maxWidth: constraints.maxWidth);
+
+        final isOverflowing = textPainter.didExceedMaxLines;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              description,
+              style: textStyle,
+              maxLines: _isExpanded ? null : 4,
+              overflow: TextOverflow.fade,
+              textAlign: TextAlign.center,
+            ),
+            if (isOverflowing)
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _isExpanded = !_isExpanded;
+                  });
+                },
+                child: Text(
+                  _isExpanded ? 'Mostrar menos' : 'Ler mais',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 
