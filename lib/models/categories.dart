@@ -1,18 +1,23 @@
 enum Category {
-  action('Ação'),
-  animation('Animação'),
-  adventure('Aventura'),
-  comedy('Comédia'),
-  documentary('Documentário'),
-  drama('Drama'),
-  sciFi('Ficção Científica'),
-  romance('Romance'),
-  suspense('Suspense'),
-  horror('Terror');
+  action('Ação', '28'),
+  animation('Animação', '16'),
+  adventure('Aventura', '12'),
+  comedy('Comédia', '35'),
+  documentary('Documentário', '99'),
+  drama('Drama', '18'),
+  sciFi('Ficção Científica', '878'),
+  romance('Romance', '10749'),
+  suspense('Suspense', '53'),
+  horror('Terror', '27');
 
   final String categoryName;
+  final String apiCategoryId;
 
-  const Category(
-    this.categoryName,
-  );
+  const Category(this.categoryName, this.apiCategoryId);
+
+  static Category? fromApiCategoryId(String id) {
+    return Category.values.firstWhere(
+      (category) => category.apiCategoryId == id,
+    );
+  }
 }

@@ -4,8 +4,10 @@ class CategorySelector extends StatelessWidget {
   final List<String> categories;
   final Function(String) onCategorySelected;
 
-  CategorySelector(
-      {required this.categories, required this.onCategorySelected});
+  CategorySelector({
+    required this.categories,
+    required this.onCategorySelected,
+  });
 
   @override
   Widget build(BuildContext context) {

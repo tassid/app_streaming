@@ -1,13 +1,18 @@
+import 'package:app_streaming/models/categories.dart';
 import 'package:app_streaming/views/home/bars/categories_bar.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final Category selectedCategory;
+  final void Function(Category) onCategorySelected;
 
   const AppBarWidget({
     super.key,
     required this.title,
+    required this.selectedCategory, // Selected category passed from parent
+    required this.onCategorySelected, // Callback passed from parent
   });
 
   @override
@@ -67,7 +72,13 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                     ],
                   ),
                 ),
-                categoriesBar(context: context),
+                categoriesBar(
+                  context: context,
+                  selectedCategory:
+                      selectedCategory, // Pass the selected category
+                  onCategorySelected:
+                      onCategorySelected, // Handle category selection
+                ),
               ],
             ),
           ),

@@ -3,7 +3,13 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 
 class CategoriesPage extends StatelessWidget {
-  const CategoriesPage({super.key});
+  final void Function(Category)
+      onCategorySelected; // Update the type to Category
+
+  const CategoriesPage({
+    super.key,
+    required this.onCategorySelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +37,8 @@ class CategoriesPage extends StatelessWidget {
                         ),
                       ),
                       onTap: () {
-                        Navigator.of(context).pop(category);
+                        Navigator.of(context).pop(); // Close the dialog
+                        onCategorySelected(category); // Trigger the callback
                       },
                     );
                   }).toList(),
@@ -42,7 +49,8 @@ class CategoriesPage extends StatelessWidget {
                 child: FloatingActionButton(
                   backgroundColor: Colors.white,
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context)
+                        .pop(); // Close the dialog without selecting
                   },
                   child: const Icon(
                     Icons.close,
@@ -56,21 +64,4 @@ class CategoriesPage extends StatelessWidget {
       ),
     );
   }
-}
-
-void showCategoriesPage(BuildContext context) {
-  showGeneralDialog(
-    context: context,
-    barrierDismissible: true,
-    barrierLabel: 'Fechar',
-    pageBuilder: (context, _, __) {
-      return const CategoriesPage();
-    },
-    transitionBuilder: (context, anim1, anim2, child) {
-      return FadeTransition(
-        opacity: anim1,
-        child: child,
-      );
-    },
-  );
 }
