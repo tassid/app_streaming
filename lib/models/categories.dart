@@ -1,4 +1,5 @@
 enum Category {
+  all('Categorias', ''),
   action('Ação', '28'),
   animation('Animação', '16'),
   adventure('Aventura', '12'),

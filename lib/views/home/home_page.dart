@@ -13,27 +13,43 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final ApiService _apiService = ApiService();
-  late Future<List<Movie>> _popularMovies;
-  late Future<List<Movie>> _topRatedMovies;
-  late Future<List<Movie>> _upcomingMovies;
+  late Future<List<Movie>> _categoryMovies;
 
   // Track the selected category
-  Category _selectedCategory = Category.action; // Set a default category
+  Category _selectedCategory = Category.all; // Set a default category
 
   @override
   void initState() {
     super.initState();
-    _popularMovies = _apiService.fetchMovies('popular');
-    _topRatedMovies = _apiService.fetchMovies('top_rated');
-    _upcomingMovies = _apiService.fetchMovies('upcoming');
+    _fetchMoviesByCategory(_selectedCategory);
   }
 
   void _onCategorySelected(Category category) {
     setState(() {
       _selectedCategory = category; // Update selected category
+      _fetchMoviesByCategory(
+          _selectedCategory); // Fetch movies by selected category
     });
-    // Fetch movies or perform other actions based on the selected category
-    // Example: _apiService.fetchMoviesByCategory(category);
+  }
+
+  void _fetchMoviesByCategory(Category category) {
+    // Fetch movies based on the selected category
+    setState(() {
+      _categoryMovies = _apiService.fetchMovies(category.apiCategoryId);
+    });
+
+    // Add debugging to check the API response
+    _categoryMovies.then((movies) {
+      if (movies.isEmpty) {
+        print('No movies returned for category: ${category.categoryName}');
+      } else {
+        print(
+            'Fetched ${movies.length} movies for category: ${category.categoryName}');
+      }
+    }).catchError((error) {
+      print(
+          'Error fetching movies for category: ${category.categoryName}, error: $error');
+    });
   }
 
   Widget _buildMovieCarousel(Future<List<Movie>> moviesFuture) {
@@ -105,7 +121,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FutureBuilder<List<Movie>>(
-              future: _popularMovies,
+              future: _categoryMovies,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -119,8 +135,7 @@ class _HomePageState extends State<HomePage> {
                 }
               },
             ),
-            _buildMovieCarousel(_topRatedMovies),
-            _buildMovieCarousel(_upcomingMovies),
+            _buildMovieCarousel(_categoryMovies),
           ],
         ),
       ),

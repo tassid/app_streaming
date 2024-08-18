@@ -57,6 +57,8 @@ class Movie {
   String getVoteAverageText() {
     return '$voteAverage/10';
   }
+
+  map(Movie Function(dynamic movie) param0) {}
 }
 
 class Genre {

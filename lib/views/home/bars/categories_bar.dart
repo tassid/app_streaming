@@ -32,7 +32,7 @@ Widget categoriesBar({
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    selectedCategory.categoryName, // Show the selected category
+                    selectedCategory.categoryName,
                     style: const TextStyle(color: Colors.white),
                   ),
                   const Icon(

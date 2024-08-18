@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:app_streaming/models/categories.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_streaming/models/movie.dart';
@@ -9,36 +8,35 @@ class ApiService {
   final String baseUrl = 'https://api.themoviedb.org/3';
   final String language = 'pt-BR'; // Define o idioma para português do Brasil
 
-  // Função para buscar filmes por categoria (ex: popular, top_rated)
-  Future<List<Movie>> fetchMovies(String category) async {
+  Future<List<Movie>> fetchMovies(String genreId) async {
     final response = await http.get(Uri.parse(
-        '$baseUrl/movie/$category?api_key=$apiKey&language=$language'));
+        '$baseUrl/discover/movie?api_key=$apiKey&language=$language&with_genres=$genreId'));
 
-    // Adicionar impressão de debug para verificar a resposta da API
+    // Add debugging information
     if (kDebugMode) {
+      print('Fetching movies for genre ID: $genreId');
+      print(
+          'API URL: $baseUrl/discover/movie?api_key=$apiKey&language=$language&with_genres=$genreId');
       print('Response status: ${response.statusCode}');
-    }
-    if (kDebugMode) {
       print('Response body: ${response.body}');
     }
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
 
-      // Verifique se a chave 'results' existe e não é null
       if (jsonResponse['results'] != null && jsonResponse['results'] is List) {
         final List results = jsonResponse['results'];
 
         if (results.isNotEmpty) {
           return results.map((movie) => Movie.fromJson(movie)).toList();
         } else {
-          return []; // Retorna uma lista vazia se não houver resultados
+          return []; // No results
         }
       } else {
         if (kDebugMode) {
           print('Results is null or not a list');
         }
-        return []; // Retorna uma lista vazia se 'results' for null ou não for uma lista
+        return []; // Results is null or not a list
       }
     } else {
       throw Exception('Failed to load movies');
