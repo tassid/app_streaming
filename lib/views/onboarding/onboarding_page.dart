@@ -19,7 +19,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   void initState() {
     super.initState();
     // Fetch popular movies
-    _moviesFuture = _apiService.fetchMovies('popular');
+    _moviesFuture = _apiService.fetchMoviesOnboarding('popular');
   }
 
   @override
@@ -55,11 +55,16 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (snapshot.hasData) {
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                   final movies = snapshot.data!;
                   return _buildMovieGrid(movies);
                 } else {
-                  return const Center(child: Text('No data available'));
+                  return const Center(
+                    child: Text(
+                      'No movies available',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  );
                 }
               },
             ),
