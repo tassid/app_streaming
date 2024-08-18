@@ -1,13 +1,20 @@
+import 'package:app_streaming/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:app_streaming/views/home/home_page.dart';
 import 'package:app_streaming/views/home/movies_page.dart';
 import 'package:app_streaming/views/home/tvshows_page.dart';
 import 'package:app_streaming/views/login/login_page.dart';
+import 'package:app_streaming/views/login/whos_watching_page.dart';
 import 'package:app_streaming/views/onboarding/onboarding_page.dart';
 import 'package:app_streaming/views/onboarding/splash_page.dart';
-import 'package:app_streaming/views/login/whos_watching_page.dart';
-import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     MaterialApp(
       themeMode: ThemeMode.dark,
