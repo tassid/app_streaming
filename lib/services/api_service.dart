@@ -104,5 +104,47 @@ class ApiService {
     }
   }
 
+  Future<List<Movie>> fetchMoviesOnboarding(String categoryOrGenreId,
+      {bool isGenre = false}) async {
+    String url;
+
+    if (isGenre) {
+      // If it's a genre, use the discover endpoint with genres
+      url =
+          '$baseUrl/discover/movie?api_key=$apiKey&language=$language&with_genres=$categoryOrGenreId';
+    } else {
+      // If it's a predefined category (e.g., popular), use the specific endpoint
+      url =
+          '$baseUrl/movie/$categoryOrGenreId?api_key=$apiKey&language=$language';
+    }
+
+    final response = await http.get(Uri.parse(url));
+
+    if (kDebugMode) {
+      print('Fetching movies for $categoryOrGenreId');
+      print('API URL: $url');
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+
+      if (jsonResponse['results'] != null && jsonResponse['results'] is List) {
+        final List results = jsonResponse['results'];
+
+        if (results.isNotEmpty) {
+          return results.map((movie) => Movie.fromJson(movie)).toList();
+        } else {
+          return [];
+        }
+      } else {
+        return [];
+      }
+    } else {
+      throw Exception('Failed to load movies');
+    }
+  }
+
   getPopularMovies() {}
 }
