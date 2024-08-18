@@ -10,12 +10,13 @@ class UserProfile {
   UserProfile({
     required this.name,
     this.avatarUrl,
+    int? seed,
   }) {
-    color = _generateColor();
+    color = _generateColor(seed: seed);
   }
 
-  Color _generateColor() {
-    final Random random = Random();
+  Color _generateColor({int? seed}) {
+    final Random random = seed != null ? Random(seed) : Random();
     Color randomColor = Colors.red;
 
     while (!randomColor.isColorContrastingWithWhite()) {

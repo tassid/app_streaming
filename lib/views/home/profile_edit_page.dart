@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:app_streaming/models/user_profile.dart';
+
+// Example Profile class
+class Profile {
+  final String name;
+  final String email;
+
+  Profile({required this.name, required this.email});
+}
 
 class EditProfilePage extends StatefulWidget {
-  final UserProfile profile;
+  final Profile profile; // Non-nullable profile parameter
 
   const EditProfilePage({super.key, required this.profile});
 
   @override
-  State<EditProfilePage> createState() => _EditProfilePageState();
+  _EditProfilePageState createState() => _EditProfilePageState();
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
@@ -16,91 +23,51 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
+    // Initialize the TextEditingController with the current profile's name
     _nameController = TextEditingController(text: widget.profile.name);
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
+    _nameController.dispose(); // Dispose the controller when the page is closed
     super.dispose();
-  }
-
-  void _saveProfile() {
-    setState(() {
-      widget.profile.name = _nameController.text;
-    });
-    Navigator.of(context).pop(widget.profile);
-  }
-
-  void _deleteProfile() {
-    // Implement delete logic
-    Navigator.of(context).pop(null);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Editar Perfil'),
-        foregroundColor: Colors.white,
+        title: const Text("Edit Profile"),
       ),
-      body: Container(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-        decoration: const BoxDecoration(
-          color: Colors.black54,
-        ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Card(
-              color: widget.profile.color,
-              child: SizedBox(
-                width: 100,
-                height: 100,
-                child: Center(
-                  child: Text(
-                    widget.profile
-                        .name[0], // Display the first letter of the name
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 40,
-                    ),
-                  ),
-                ),
-              ),
+            Text(
+              "Editing Profile: ${widget.profile.name}",
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _nameController,
-              style: const TextStyle(color: Colors.white),
               decoration: const InputDecoration(
-                labelText: 'Nome do Perfil',
-                labelStyle: TextStyle(color: Colors.white),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
-                ),
+                labelText: "Name",
+                border: OutlineInputBorder(),
               ),
             ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: _deleteProfile,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                  ),
-                  child: const Text('Excluir Perfil'),
-                ),
-                ElevatedButton(
-                  onPressed: _saveProfile,
-                  child: const Text('Salvar'),
-                ),
-              ],
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                // Handle save or update profile logic
+                // For example, you might update the profile object here and send it back to the previous screen
+                String updatedName = _nameController.text;
+
+                // Logic to save the updated name, such as updating a database or a state management solution
+                Navigator.pop(
+                    context, updatedName); // Pass the updated name back
+              },
+              child: const Text("Save"),
             ),
           ],
         ),

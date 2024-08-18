@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class PasswordTextFieldWidget extends StatefulWidget {
-  const PasswordTextFieldWidget({super.key});
+  final TextEditingController controller; // Controller passed from the parent
+
+  const PasswordTextFieldWidget({super.key, required this.controller});
 
   @override
   State<PasswordTextFieldWidget> createState() =>
@@ -9,7 +11,6 @@ class PasswordTextFieldWidget extends StatefulWidget {
 }
 
 class _PasswordTextFieldWidgetState extends State<PasswordTextFieldWidget> {
-  final _passwordController = TextEditingController();
   bool _obscureText = true;
 
   String? _validatePassword(String? value) {
@@ -20,15 +21,9 @@ class _PasswordTextFieldWidgetState extends State<PasswordTextFieldWidget> {
   }
 
   @override
-  void dispose() {
-    _passwordController.dispose(); //limpar o controlador
-    super.dispose(); //limpar a memória
-  }
-
-  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: _passwordController,
+      controller: widget.controller, // Use the controller from the parent
       style: const TextStyle(color: Colors.white),
       obscureText: _obscureText,
       decoration: InputDecoration(

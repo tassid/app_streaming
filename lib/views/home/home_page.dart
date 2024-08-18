@@ -33,12 +33,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _fetchMoviesByCategory(Category category) {
-    // Fetch movies based on the selected category
     setState(() {
       _categoryMovies = _apiService.fetchMovies(category.apiCategoryId);
     });
 
-    // Add debugging to check the API response
     _categoryMovies.then((movies) {
       if (movies.isEmpty) {
         print('No movies returned for category: ${category.categoryName}');
@@ -108,6 +106,24 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _buildTopSection(Future<List<Movie>> categoryMovies) {
+    return FutureBuilder<List<Movie>>(
+      future: categoryMovies,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No movies available'));
+        } else {
+          final movie = snapshot.data!.first;
+          return MovieBanner(movie: movie);
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,21 +136,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FutureBuilder<List<Movie>>(
-              future: _categoryMovies,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No movies available'));
-                } else {
-                  final movie = snapshot.data!.first;
-                  return MovieBanner(movie: movie);
-                }
-              },
-            ),
+            _buildTopSection(_categoryMovies),
             _buildMovieCarousel(_categoryMovies),
           ],
         ),

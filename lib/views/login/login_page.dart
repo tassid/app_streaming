@@ -2,6 +2,7 @@ import 'package:app_streaming/views/login/password_text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,6 +14,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
+  final _passwordController = TextEditingController(); // Add this controller
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
@@ -26,9 +29,51 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
+  Future<void> _loginWithEmailAndPassword() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil("/whoswatching", (route) => false);
+      } on FirebaseAuthException catch (e) {
+        String errorMessage;
+        if (e.code == 'user-not-found') {
+          errorMessage = 'Usuário não encontrado.';
+        } else if (e.code == 'wrong-password') {
+          errorMessage = 'Senha incorreta.';
+        } else {
+          errorMessage = 'Erro: ${e.message}';
+        }
+        _showErrorDialog(errorMessage);
+      } catch (e) {
+        _showErrorDialog('Erro desconhecido. Tente novamente mais tarde.');
+      }
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Erro'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
+    _passwordController.dispose(); // Dispose the password controller
     super.dispose();
   }
 
@@ -87,7 +132,9 @@ class _LoginPageState extends State<LoginPage> {
                   validator: _validateEmail,
                 ),
                 const SizedBox(height: 16),
-                const PasswordTextFieldWidget(),
+                PasswordTextFieldWidget(
+                    controller:
+                        _passwordController), // Pass the controller here
                 const SizedBox(height: 16),
                 GestureDetector(
                   onTap: () {
@@ -105,14 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            "/whoswatching", (Route rota) {
-                          return false;
-                        });
-                      }
-                    },
+                    onPressed: _loginWithEmailAndPassword,
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),

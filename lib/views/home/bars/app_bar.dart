@@ -1,5 +1,6 @@
 import 'package:app_streaming/models/categories.dart';
 import 'package:app_streaming/views/home/bars/categories_bar.dart';
+import 'package:app_streaming/views/home/profile_edit_page.dart';
 import 'package:app_streaming/views/home/search/search_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
@@ -18,6 +19,8 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(130);
+
+  get profile => null;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +72,15 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                           IconButton(
                             icon: const Icon(Icons.account_circle,
                                 color: Colors.white),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      EditProfilePage(profile: profile),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
