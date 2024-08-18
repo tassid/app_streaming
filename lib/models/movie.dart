@@ -22,7 +22,7 @@ class Movie {
   });
 
   factory Movie.fromJson(Map<String, dynamic> json) {
-    // Verifique se 'genres' existe e se é uma lista válida
+    // Handle the genres, ensuring we correctly parse them if present
     final genresJson = json['genres'] as List<dynamic>?;
 
     return Movie(
@@ -36,16 +36,20 @@ class Movie {
       voteCount: json['vote_count'] ?? 0,
       genres: genresJson != null
           ? genresJson.map((genre) => Genre.fromJson(genre)).toList()
-          : [], // Retorna uma lista vazia se não houver gêneros
+          : [], // Return an empty list if there are no genres
     );
   }
 
   String getPosterUrl() {
-    return 'https://image.tmdb.org/t/p/w500$posterPath';
+    return posterPath.isNotEmpty
+        ? 'https://image.tmdb.org/t/p/w500$posterPath'
+        : 'https://via.placeholder.com/500'; // Fallback for missing poster
   }
 
   String getBackdropUrl() {
-    return 'https://image.tmdb.org/t/p/w780$backdropPath';
+    return backdropPath.isNotEmpty
+        ? 'https://image.tmdb.org/t/p/w780$backdropPath'
+        : 'https://via.placeholder.com/780'; // Fallback for missing backdrop
   }
 
   String getFormattedReleaseDate() {
@@ -57,8 +61,6 @@ class Movie {
   String getVoteAverageText() {
     return '$voteAverage/10';
   }
-
-  map(Movie Function(dynamic movie) param0) {}
 }
 
 class Genre {
