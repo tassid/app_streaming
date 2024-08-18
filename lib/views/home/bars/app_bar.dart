@@ -1,5 +1,6 @@
 import 'package:app_streaming/models/categories.dart';
 import 'package:app_streaming/views/home/bars/categories_bar.dart';
+import 'package:app_streaming/views/home/search/search_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
@@ -55,12 +56,15 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                       Row(
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.cast, color: Colors.white),
-                            onPressed: () {},
-                          ),
-                          IconButton(
                             icon: const Icon(Icons.search, color: Colors.white),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SearchPage(),
+                                ),
+                              );
+                            },
                           ),
                           IconButton(
                             icon: const Icon(Icons.account_circle,

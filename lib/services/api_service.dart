@@ -146,5 +146,49 @@ class ApiService {
     }
   }
 
+  Future<List<Movie>> searchMoviesByTitle(
+      {required String title,
+      bool includeAdult = false,
+      String language = 'pt-BR',
+      int page = 1,
+      String? region,
+      String? year,
+      String? primaryReleaseYear}) async {
+    final Uri uri = Uri.parse(
+      '$baseUrl/search/movie',
+    ).replace(queryParameters: {
+      'api_key': apiKey,
+      'query': title,
+      'include_adult': includeAdult.toString(),
+      'language': language,
+      'page': page.toString(),
+      if (region != null) 'region': region,
+      if (year != null) 'year': year,
+      if (primaryReleaseYear != null)
+        'primary_release_year': primaryReleaseYear,
+    });
+
+    final response = await http.get(uri);
+
+    if (kDebugMode) {
+      print('Search URL: ${uri.toString()}');
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+
+      if (jsonResponse['results'] != null && jsonResponse['results'] is List) {
+        final List results = jsonResponse['results'];
+        return results.map((movie) => Movie.fromJson(movie)).toList();
+      } else {
+        return [];
+      }
+    } else {
+      throw Exception('Failed to search movies');
+    }
+  }
+
   getPopularMovies() {}
 }
