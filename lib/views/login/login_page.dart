@@ -14,7 +14,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController(); // Add this controller
+  final _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String? _validateEmail(String? value) {
