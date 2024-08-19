@@ -1,3 +1,5 @@
+import 'package:app_streaming/views/home/search/search_page.dart';
+import 'package:app_streaming/views/home/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
@@ -47,17 +49,27 @@ class AppBarExtra extends StatelessWidget implements PreferredSizeWidget {
                   Row(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.cast, color: Colors.white),
-                        onPressed: () {},
-                      ),
-                      IconButton(
                         icon: const Icon(Icons.search, color: Colors.white),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SearchPage(),
+                            ),
+                          );
+                        },
                       ),
                       IconButton(
                         icon: const Icon(Icons.account_circle,
                             color: Colors.white),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SettingsPage(),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

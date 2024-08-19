@@ -1,8 +1,10 @@
 import 'dart:ui';
-import 'package:app_streaming/models/movie.dart';
-import 'package:app_streaming/services/api_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:app_streaming/services/api_service.dart';
+import 'package:app_streaming/models/movie.dart';
+import 'trailer_page.dart'; // Import the TrailerPage
 
 void _enterFullScreen() {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
@@ -16,10 +18,7 @@ void _exitFullScreen() {
 class PlayPage extends StatefulWidget {
   final int movieId;
 
-  const PlayPage({
-    super.key,
-    required this.movieId,
-  });
+  const PlayPage({super.key, required this.movieId});
 
   @override
   _PlayPageState createState() => _PlayPageState();
@@ -66,13 +65,30 @@ class _PlayPageState extends State<PlayPage> {
     setState(() {
       _isWatchingMovie = true;
       _enterFullScreen();
-      // TODO: Adicionar a lógica para reproduzir o filme
+      // TODO: Add logic to play the movie
     });
   }
 
-  void _viewTrailer() {
-    _enterFullScreen();
-    // TODO: Adicionar a lógica para reproduzir o trailer em tela cheia
+  void _viewTrailer() async {
+    try {
+      final trailerUrl = await _apiService.fetchTrailer(widget.movieId);
+      if (trailerUrl.isNotEmpty) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TrailerPage(trailerUrl: trailerUrl),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Trailer não disponível.')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao carregar trailer: $error')),
+      );
+    }
   }
 
   @override
@@ -100,20 +116,19 @@ class _PlayPageState extends State<PlayPage> {
           } else if (movieSnapshot.hasData) {
             final movie = movieSnapshot.data!;
 
-            // Pegando o primeiro gênero ou mostrando "Desconhecido"
-            final genreName = movie.genres != null && movie.genres.isNotEmpty
+            // Get the first genre or show "Desconhecido"
+            final genreName = movie.genres.isNotEmpty
                 ? movie.genres.first.name
                 : "Desconhecido";
 
             // Extract the release year from the release date
-            final releaseYear =
-                movie.releaseDate != null && movie.releaseDate!.isNotEmpty
-                    ? DateTime.parse(movie.releaseDate!).year.toString()
-                    : "Desconhecido";
+            final releaseYear = movie.releaseDate.isNotEmpty
+                ? DateTime.parse(movie.releaseDate).year.toString()
+                : "Desconhecido";
 
             return Stack(
               children: [
-                // Fundo com poster do filme
+                // Background with movie poster
                 Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -128,7 +143,7 @@ class _PlayPageState extends State<PlayPage> {
                     ),
                   ),
                 ),
-                // Conteúdo da página
+                // Page content
                 SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -317,7 +332,7 @@ class _PlayPageState extends State<PlayPage> {
               ),
               const SizedBox(height: 16),
               SizedBox(
-                height: 300, // Ajuste a altura para evitar overflow
+                height: 300, // Adjust height to avoid overflow
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: relatedMovies.length,
@@ -340,7 +355,7 @@ class _PlayPageState extends State<PlayPage> {
                               borderRadius: BorderRadius.circular(8),
                               child: Image.network(
                                 movie.getPosterUrl(),
-                                height: 200, // Diminuir a altura da imagem
+                                height: 200, // Decrease image height
                                 fit: BoxFit.cover,
                               ),
                             ),

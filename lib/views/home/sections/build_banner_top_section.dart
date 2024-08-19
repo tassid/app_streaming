@@ -5,10 +5,18 @@ import 'package:app_streaming/views/watch/play_page.dart';
 class MovieBanner extends StatelessWidget {
   final Movie movie;
 
-  const MovieBanner({Key? key, required this.movie}) : super(key: key);
+  const MovieBanner({super.key, required this.movie});
 
   @override
   Widget build(BuildContext context) {
+    // Print the genres to the console for debugging
+    print('Movie: ${movie.title}');
+    print('Genres: ${movie.genres.map((genre) => genre.name).toList()}');
+
+    final genreName = movie.genres != null && movie.genres.isNotEmpty
+        ? movie.genres.first.name
+        : "Desconhecido";
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -20,7 +28,6 @@ class MovieBanner extends StatelessWidget {
       },
       child: Stack(
         children: [
-          // Background image
           Container(
             height: 400,
             decoration: BoxDecoration(
@@ -34,7 +41,6 @@ class MovieBanner extends StatelessWidget {
               ),
             ),
           ),
-          // Dark overlay
           Container(
             height: 400,
             decoration: BoxDecoration(
@@ -49,51 +55,46 @@ class MovieBanner extends StatelessWidget {
               ),
             ),
           ),
-          // Movie title and action buttons
-          Positioned(
-            bottom: 50,
-            left: 20,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  movie.title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 100.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 250),
+                  Text(
+                    movie.title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PlayPage(movieId: movie.id),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red, // Netflix-like red color
-                      ),
-                      child: const Text('Watch Now'),
+                  const SizedBox(height: 5),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PlayPage(movieId: movie.id),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
                     ),
-                    const SizedBox(width: 10),
-                    OutlinedButton(
-                      onPressed: () {
-                        // Add more logic if needed (e.g., show movie details)
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.white),
-                      ),
-                      child: const Text('More Info'),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.play_arrow, size: 20),
+                        SizedBox(width: 8),
+                        Text('Assistir', style: TextStyle(fontSize: 16)),
+                      ],
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],

@@ -1,7 +1,10 @@
-import 'package:app_streaming/views/home/sections/build_banner_top_section.dart';
+import 'package:app_streaming/views/home/downloads_page.dart';
+import 'package:app_streaming/views/home/my_list_page.dart';
+import 'package:app_streaming/views/home/settings_page.dart';
 import 'package:flutter/material.dart';
+import 'package:app_streaming/views/home/sections/build_banner_top_section.dart';
 import 'package:app_streaming/models/movie.dart';
-import 'package:app_streaming/models/categories.dart'; // Assuming this is where your Category enum is located
+import 'package:app_streaming/models/categories.dart';
 import 'package:app_streaming/services/api_service.dart';
 import 'package:app_streaming/views/home/bars/app_bar.dart';
 import 'package:app_streaming/views/watch/play_page.dart';
@@ -17,6 +20,8 @@ class _HomePageState extends State<HomePage> {
 
   // Track the selected category
   Category _selectedCategory = Category.all; // Set a default category
+
+  int _selectedIndex = 0; // To manage the selected tab in the bottom bar
 
   @override
   void initState() {
@@ -124,9 +129,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.black,
       appBar: AppBarWidget(
         title: 'Para Você',
         selectedCategory: _selectedCategory,
@@ -136,10 +149,63 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 180),
             _buildTopSection(_categoryMovies),
             _buildMovieCarousel(_categoryMovies),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey,
+        currentIndex: _selectedIndex,
+        onTap: (int index) {
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MyListPage(),
+              ),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DownloadsPage(),
+              ),
+            );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SettingsPage(),
+              ),
+            );
+          } else {
+            setState(() {
+              _selectedIndex = index;
+            });
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Início',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'Minha Lista',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.download),
+            label: 'Downloads',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Configurações',
+          ),
+        ],
       ),
     );
   }
