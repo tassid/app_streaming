@@ -55,10 +55,25 @@ class _PlayPageState extends State<PlayPage> {
     });
   }
 
-  void _toggleInList() {
+  void _toggleInList() async {
     setState(() {
       _isInList = !_isInList;
     });
+
+    try {
+      // Assuming you have the profileId, update accordingly
+      int profileId = 1; // Replace with actual profile ID
+      await _apiService.addMovieToList(profileId, widget.movieId, _isInList);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(_isInList ? 'Added to list' : 'Removed from list')),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update list: $error')),
+      );
+    }
   }
 
   void _playMovie() {

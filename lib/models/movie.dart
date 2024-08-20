@@ -40,6 +40,8 @@ class Movie {
     );
   }
 
+  get imageUrl => null;
+
   String getPosterUrl() {
     return posterPath.isNotEmpty
         ? 'https://image.tmdb.org/t/p/w500$posterPath'
