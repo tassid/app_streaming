@@ -1,5 +1,6 @@
 import 'package:app_streaming/views/home/bars/app_bar_extra.dart';
 import 'package:app_streaming/views/home/profile_edit_page.dart';
+import 'package:app_streaming/views/login/login_page.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -10,7 +11,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarExtra(title: 'Settings'),
+      appBar: const AppBarExtra(title: 'Configurações'),
       body: Container(
         decoration: const BoxDecoration(
           color: Colors.black54,
@@ -27,7 +28,7 @@ class SettingsPage extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.notifications, color: Colors.white),
-              title: const Text('Notifications',
+              title: const Text('Notificações',
                   style: TextStyle(color: Colors.white)),
               trailing: Switch(
                 value: true,
@@ -37,21 +38,26 @@ class SettingsPage extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.lock, color: Colors.white),
-              title:
-                  const Text('Privacy', style: TextStyle(color: Colors.white)),
+              title: const Text('Privacidade',
+                  style: TextStyle(color: Colors.white)),
               onTap: () {},
             ),
             ListTile(
               leading: const Icon(Icons.help, color: Colors.white),
-              title: const Text('Help & Support',
+              title: const Text('Ajuda & Suporte',
                   style: TextStyle(color: Colors.white)),
               onTap: () {},
             ),
             ListTile(
               leading: const Icon(Icons.logout, color: Colors.white),
-              title:
-                  const Text('Logout', style: TextStyle(color: Colors.white)),
-              onTap: () {},
+              title: const Text('Sair', style: TextStyle(color: Colors.white)),
+              onTap: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                  (_) => false,
+                );
+              },
             ),
           ],
         ),

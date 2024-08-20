@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:app_streaming/services/api_service.dart'; // Importe o ApiService
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,8 +15,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController(); // Add this controller
+  final _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final ApiService _apiService = ApiService(); // Instancie o ApiService
 
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
@@ -32,10 +34,23 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _loginWithEmailAndPassword() async {
     if (_formKey.currentState!.validate()) {
       try {
+        // Fazendo login com Firebase Auth
         UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
+
+        // Obter o usuário autenticado
+        User? user = FirebaseAuth.instance.currentUser;
+        String? email = user?.email;
+
+        // Verificar ou criar perfil no backend Flask em segundo plano
+        if (email != null) {
+          _apiService
+              .verifyOrCreateUserProfile(email); // Executa em segundo plano
+        }
+
+        // Navegar para a próxima página imediatamente
         Navigator.of(context)
             .pushNamedAndRemoveUntil("/whoswatching", (route) => false);
       } on FirebaseAuthException catch (e) {
@@ -133,8 +148,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 16),
                 PasswordTextFieldWidget(
-                    controller:
-                        _passwordController), // Pass the controller here
+                  controller: _passwordController,
+                ),
                 const SizedBox(height: 16),
                 GestureDetector(
                   onTap: () {

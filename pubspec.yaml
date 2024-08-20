@@ -19,6 +19,8 @@ dependencies:
   provider: ^6.0.0
   firebase_core: ^2.15.0  
   firebase_auth: ^4.8.2  
+  webview_flutter: ^4.0.0
+  flutter_inappwebview: ^5.3.2 # Or the latest version
   
 dev_dependencies:
   flutter_test:
@@ -30,18 +32,3 @@ flutter:
   uses-material-design: true
   assets: 
     - assets/netflix_logo.svg
-    - assets/image_1.png
-    - assets/image_2.png
-    - assets/image_3.png
-    - assets/image_4.png
-    - assets/image_5.png
-    - assets/image_6.png
-    - assets/image_7.png
-    - assets/image_8.png
-    - assets/image_9.png
-    - assets/image_10.png
-    - assets/image_11.png
-    - assets/image_12.png
-    - assets/image_13.png
-    - assets/fundo_banner.jpg
-    - assets/poster.jpg
