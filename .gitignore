@@ -9,7 +9,7 @@
 .history
 .svn/
 migrate_working_dir/
-user-profile-api/
+user-profile-api/firebase-adminsdk.json
 GoogleService-Info.plist
 
 # IntelliJ related
